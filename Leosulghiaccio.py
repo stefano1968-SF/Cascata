@@ -147,9 +147,41 @@ spits_raggiunti.append((omino.x, omino.y))
 ultima_x = omino.x
 ultima_y = omino.y
 
+def animate_fall(omino):
+    for _ in range(10):
+        velocita = (HEIGHT - omino.rect.y) // 10 - 5
+        omino.rect.y += velocita
+        display.fill(WHITE)
+        omino.draw()
+        font = pygame.font.Font(None, 74)
+        text = font.render("Game Over", True, RED)
+        display.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - text.get_height() // 2 - 50))
+        pygame.display.flip()
+        clock.tick(15)
+    for rotola in range(10):
+        display.fill(WHITE)
+        # Disegna il corpo diviso in pezzi
+        pygame.draw.rect(display, omino.color, (omino.rect.x- 15, omino.rect.y, omino.body_width, omino.body_height // 2))
+        pygame.draw.rect(display, omino.color, (omino.rect.x + 15, omino.rect.y + omino.body_height // 2 + 10, omino.body_width, omino.body_height // 2))
+        pygame.draw.circle(display, omino.color_head, (omino.rect.centerx + rotola * 15, omino.rect.top - omino.head_radius), omino.head_radius)
+        pygame.draw.line(display, omino.color, (omino.rect.left, omino.rect.y), (omino.rect.left - 35, omino.rect.centery - 20 - omino.sxdx), 3)
+        pygame.draw.line(display, omino.color, (omino.rect.right, omino.rect.y), (omino.rect.right + 33, omino.rect.centery - 20 + omino.sxdx), 3)
+        pygame.draw.line(display, omino.color, (omino.rect.left, omino.rect.bottom), (omino.rect.left - 17, omino.rect.bottom + 34 + omino.sxdx), 2)
+        pygame.draw.line(display, omino.color, (omino.rect.right, omino.rect.bottom), (omino.rect.right + 14, omino.rect.bottom + 34 - omino.sxdx), 2)
+        pygame.display.flip()
+        clock.tick(15)
+    # for _ in range(10):
+    #     display.fill(WHITE)
+    #     pygame.draw.circle(display, RED, (omino.rect.centerx, omino.rect.bottom), 30)
+    #     pygame.display.flip()
+    #     clock.tick(15)
 
 def game_over_screen(score):
+    animate_fall(omino)
+
     display.fill(WHITE)
+    
+
     font = pygame.font.Font(None, 74)
     text = font.render("Game Over", True, RED)
     display.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - text.get_height() // 2 - 50))
@@ -160,7 +192,21 @@ def game_over_screen(score):
     
     pygame.display.flip()
     time.sleep(3)
+
+
+def next_level_screen(level):
+    display.fill(WHITE)
+    font = pygame.font.Font(None, 74)
+    text = font.render("Bravo, continua!", True, RED)
+    display.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - text.get_height() // 2 - 50))
     
+    font = pygame.font.Font(None, 36)
+    score_text = font.render(f"Prossimo livello: {level+1}", True, BLACK)
+    display.blit(score_text, (WIDTH // 2 - score_text.get_width() // 2, HEIGHT // 2 - score_text.get_height() // 2 + 20))
+    
+    pygame.display.flip()
+    time.sleep(3)
+
 # Ciclo principale del gioco
 while running:
     clock.tick(FPS)
@@ -204,7 +250,7 @@ while running:
             if distanza_ostacoli == 0:
                 distanza_ostacoli = 1
             valanga_speed += 1
-            time.sleep(2)
+            next_level_screen(livello-1)
             omino = Omino()
             spits = [Spit() for _ in range(5)]
             arrivo = Arrivo()
