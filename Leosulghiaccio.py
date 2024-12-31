@@ -3,6 +3,9 @@ import time
 import pygame
 import random
 
+
+#CIAO
+
 # Inizializza pygame
 pygame.init()
 
@@ -144,6 +147,20 @@ spits_raggiunti.append((omino.x, omino.y))
 ultima_x = omino.x
 ultima_y = omino.y
 
+
+def game_over_screen(score):
+    display.fill(WHITE)
+    font = pygame.font.Font(None, 74)
+    text = font.render("Game Over", True, RED)
+    display.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - text.get_height() // 2 - 50))
+    
+    font = pygame.font.Font(None, 36)
+    score_text = font.render(f"Punteggio: {score}", True, BLACK)
+    display.blit(score_text, (WIDTH // 2 - score_text.get_width() // 2, HEIGHT // 2 - score_text.get_height() // 2 + 20))
+    
+    pygame.display.flip()
+    time.sleep(3)
+    
 # Ciclo principale del gioco
 while running:
     clock.tick(FPS)
@@ -166,10 +183,15 @@ while running:
             ultima_x = spit.x
             spits_raggiunti.append((spit.x, spit.y))
             score += 10
+            # Mostra schermata di "Game Over" e punteggio
+
+
+            # Controllo collisioni con ostacoli
 
     for ostacolo in ostacoli:
         if omino.rect.colliderect(ostacolo.rect):
             print("Hai perso!")
+            game_over_screen(score)
             time.sleep(1)
             running = False
 
