@@ -37,6 +37,7 @@ class Omino:
         self.head_radius = 15
         self.color = BLUE
         self.sxdx = 30
+        self.dxsx = 1
         self.color_head = BLACK
         self.rect = pygame.Rect(self.x - self.body_width // 2, self.y - self.body_height // 2, self.body_width,
                                 self.body_height)
@@ -52,56 +53,92 @@ class Omino:
 
         # Disegna le braccia
         pygame.draw.line(display, self.color, (self.rect.left, self.rect.y),
-                         (self.rect.left - 30, self.rect.centery - 20- self.sxdx), 3)
+                         (self.rect.left - 30 - self.dxsx, self.rect.centery - 30 - self.sxdx), 3)
         pygame.draw.line(display, self.color, (self.rect.right, self.rect.y),
-                         (self.rect.right + 30, self.rect.centery - 20 + self.sxdx), 3)
+                         (self.rect.right + 30 - self.dxsx, self.rect.centery - 30 + self.sxdx), 3)
 
         # Disegna le gambe
         pygame.draw.line(display, self.color, (self.rect.left, self.rect.bottom),
-                         (self.rect.left - 10, self.rect.bottom + 30 + self.sxdx), 2)
+                         (self.rect.left - 10 - self.dxsx, self.rect.bottom + 30 + self.sxdx), 2)
         pygame.draw.line(display, self.color, (self.rect.right, self.rect.bottom),
-                         (self.rect.right + 10, self.rect.bottom + 30 - self.sxdx), 2)
+                         (self.rect.right + 10 +self.dxsx, self.rect.bottom + 30 - self.sxdx), 2)
 
     def move(self, keys):
         if keys[pygame.K_LEFT] and self.rect.left > 0:
             self.rect.x -= OMINO_SPEED
-            self.sxdx = 0
+            self.sxdx = 1
+            if self.dxsx == 20:
+                self.dxsx = 1
+            elif self.dxsx == 1:
+                self.dxsx = -20
+            elif self.dxsx == -20:
+                self.dxsx = -1
+            elif self.dxsx == -1:
+                self.dxsx = 20
+            
         if keys[pygame.K_RIGHT] and self.rect.right < WIDTH:
             self.rect.x += OMINO_SPEED
-            self.sxdx = 0
+            self.sxdx = 1
+            if self.dxsx == 20:
+                self.dxsx = 1
+            elif self.dxsx == 1:
+                self.dxsx = -20
+            elif self.dxsx == -20:
+                self.dxsx = -1
+            elif self.dxsx == -1:
+                self.dxsx = 20
         if keys[pygame.K_UP] and self.rect.top > 0:
             self.rect.y -= OMINO_SPEED
+            self.dxsx = 1
             if self.sxdx == 30:
+                self.sxdx = 1
+            elif self.sxdx == 1:
                 self.sxdx = -30
-            else:
+            elif self.sxdx == -30:
+                self.sxdx = -1
+            elif self.sxdx == -1:
                 self.sxdx = 30
 
         if keys[pygame.K_DOWN] and self.rect.bottom < HEIGHT:
             self.rect.y += OMINO_SPEED
+            self.dxsx = 1
             if self.sxdx == 30:
+                self.sxdx = 1
+            elif self.sxdx == 1:
                 self.sxdx = -30
-            else:
+            elif self.sxdx == -30:
+                self.sxdx = -1
+            elif self.sxdx == -1:
                 self.sxdx = 30
 
     def barriera(self, keys):
         if keys[pygame.K_LEFT] and self.rect.left > 0:
             self.rect.x += OMINO_SPEED
-            self.sxdx = 0
+            self.sxdx = 1
         if keys[pygame.K_RIGHT] and self.rect.right < WIDTH:
             self.rect.x -= OMINO_SPEED
-            self.sxdx = 0
+            self.sxdx = 1
         if keys[pygame.K_UP] and self.rect.top > 0:
             self.rect.y += OMINO_SPEED
             if self.sxdx == 30:
+                self.sxdx = 1
+            elif self.sxdx == 1:
                 self.sxdx = -30
-            else:
+            elif self.sxdx == -30:
+                self.sxdx = -1
+            elif self.sxdx == -1:
                 self.sxdx = 30
+
 
         if keys[pygame.K_DOWN] and self.rect.bottom < HEIGHT:
             self.rect.y -= OMINO_SPEED
             if self.sxdx == 30:
+                self.sxdx = 1
+            elif self.sxdx == 1:
                 self.sxdx = -30
-            else:
+            elif self.sxdx == -30:
+                self.sxdx = -1
+            elif self.sxdx == -1:
                 self.sxdx = 30
 # Classe per gli spit
 class Spit:
