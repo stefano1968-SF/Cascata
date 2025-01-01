@@ -2,7 +2,8 @@ import time
 
 import pygame
 import random
-
+import numpy as np
+import os
 
 #CIAO
 
@@ -13,7 +14,7 @@ pygame.init()
 WIDTH, HEIGHT = 800, 600
 FPS = 60
 OMINO_SPEED = 5
-SPIT_RADIUS = 10
+SPIT_RADIUS = 15
 
 # Colori
 WHITE = (255, 255, 255)
@@ -84,30 +85,66 @@ class Omino:
             else:
                 self.sxdx = 30
 
+    def barriera(self, keys):
+        if keys[pygame.K_LEFT] and self.rect.left > 0:
+            self.rect.x += OMINO_SPEED
+            self.sxdx = 0
+        if keys[pygame.K_RIGHT] and self.rect.right < WIDTH:
+            self.rect.x -= OMINO_SPEED
+            self.sxdx = 0
+        if keys[pygame.K_UP] and self.rect.top > 0:
+            self.rect.y += OMINO_SPEED
+            if self.sxdx == 30:
+                self.sxdx = -30
+            else:
+                self.sxdx = 30
 
+        if keys[pygame.K_DOWN] and self.rect.bottom < HEIGHT:
+            self.rect.y -= OMINO_SPEED
+            if self.sxdx == 30:
+                self.sxdx = -30
+            else:
+                self.sxdx = 30
 # Classe per gli spit
 class Spit:
     def __init__(self):
         self.x = random.randint(0, WIDTH - SPIT_RADIUS * 2)
-        self.y = random.randint(0, HEIGHT // 2)
+        self.y = random.randint(HEIGHT*0.1, HEIGHT // 1.2)
         self.color = GRAY
         self.radius = SPIT_RADIUS
         self.rect = pygame.Rect(self.x, self.y, self.radius * 2, self.radius * 2)
 
     def draw(self):
-        pygame.draw.circle(display, self.color, (self.x + self.radius, self.y + self.radius), self.radius)
+        pygame.draw.circle(display, self.color, (self.x + self.radius, self.y + self.radius), 10)
 
 # Classe per arrivo
 class Arrivo:
     def __init__(self):
         self.x = random.randint(0, WIDTH - SPIT_RADIUS * 2)
-        self.y = + SPIT_RADIUS * 2
+        self.y = + SPIT_RADIUS 
         self.color = RED
         self.radius = SPIT_RADIUS
         self.rect = pygame.Rect(self.x, self.y, self.radius * 2, self.radius * 2)
 
     def draw(self):
-        pygame.draw.circle(display, self.color, (self.x + self.radius, self.y + self.radius), self.radius)
+        pygame.draw.circle(display, self.color, (self.x + self.radius, self.y + self.radius), 10)
+
+class Barriera:
+    def __init__(self):
+        self.x = random.randint(0, WIDTH - 100)
+        y_options = [HEIGHT * 0.2, HEIGHT * 0.8, HEIGHT * 0.4, HEIGHT * 0.6]
+        self.y = random.choice(y_options)
+        #self.y = random.randint(HEIGHT*0.2, HEIGHT *0.8)
+        self.width = random.randint(50, 100)
+        self.height = random.randint(10, 40)
+        self.color = BLACK
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+    
+    def draw(self):
+        pygame.draw.rect(display, self.color, self.rect)
+
+ 
+        
 
 # Classe per le valanghe e le stalattiti
 class Ostacolo:
@@ -120,13 +157,21 @@ class Ostacolo:
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
 
     def draw(self):
-        pygame.draw.rect(display, self.color, self.rect)
-
+        #pygame.draw.rect(display, self.color, self.rect)
+        pygame.draw.polygon(display, self.color, [(self.rect.x, self.rect.y), (self.rect.x + self.width, self.rect.y), (self.rect.x + self.width // 2, self.rect.y + self.height)])
     def move(self):
         self.rect.y += valanga_speed
         if self.rect.top > HEIGHT:
             self.rect.y = random.randint(-200, -50)
             self.rect.x = random.randint(0, distanza_ostacoli * WIDTH - self.width)
+    # def move(self):
+        # self.recty += valanga_speed
+        # self.y = self.recty
+        # if (self.y-self.height//2) > HEIGHT:
+        #     self.recty = random.randint(-200, -50)
+        #     self.y = self.recty
+        #     self.rectx = random.randint(0, distanza_ostacoli * WIDTH - self.width)
+        #     self.x = self.rectx
 
 
 # Inizializza oggetti
@@ -134,6 +179,12 @@ omino = Omino()
 spits = [Spit() for _ in range(5)]
 arrivo = Arrivo()
 ostacoli = [Ostacolo() for _ in range(3)]
+barriere = []
+
+while len(barriere) == 0:
+    barriera_temp = Barriera()
+    if not any(barriera_temp.rect.colliderect(spit.rect) for spit in spits):
+        barriere.append(barriera_temp)
 
 # Variabili di gioco
 score = 0
@@ -170,11 +221,7 @@ def animate_fall(omino):
         pygame.draw.line(display, omino.color, (omino.rect.right, omino.rect.bottom), (omino.rect.right + 14, omino.rect.bottom + 34 - omino.sxdx), 2)
         pygame.display.flip()
         clock.tick(15)
-    # for _ in range(10):
-    #     display.fill(WHITE)
-    #     pygame.draw.circle(display, RED, (omino.rect.centerx, omino.rect.bottom), 30)
-    #     pygame.display.flip()
-    #     clock.tick(15)
+
 
 def game_over_screen(score):
     animate_fall(omino)
@@ -190,7 +237,19 @@ def game_over_screen(score):
     score_text = font.render(f"Punteggio: {score}", True, BLACK)
     display.blit(score_text, (WIDTH // 2 - score_text.get_width() // 2, HEIGHT // 2 - score_text.get_height() // 2 + 20))
     
+    if os.path.exists("highscore.txt"):
+        with open("highscore.txt", "r") as file:
+            highscore = int(file.read())
+    else:
+        highscore = 0
+    if score > highscore:
+        with open("highscore.txt", "w") as file:
+            file.write(str(score))
+        font = pygame.font.Font(None, 36)
+        record_text = font.render(f"Nuovo record!", True, BLACK)
+        display.blit(record_text, (WIDTH // 2 - record_text.get_width() // 2, HEIGHT // 2 - record_text.get_height() // 2 + 80))
     pygame.display.flip()
+
     time.sleep(3)
 
 
@@ -219,7 +278,15 @@ while running:
     # Movimento omino
     keys = pygame.key.get_pressed()
     omino.move(keys)
-
+    for barriera in barriere:
+        if omino.rect.colliderect(barriera.rect):
+            omino.barriera(keys)
+    #print(keys)
+    # if omino.rect.colliderect(barriera.rect):
+    #     #print("Hai perso!")
+    #     game_over_screen(score)
+    #     time.sleep(1)
+    #     running = False
     # Controllo collisioni
     for spit in spits[:]:
         if omino.rect.colliderect(spit.rect):
@@ -251,10 +318,18 @@ while running:
                 distanza_ostacoli = 1
             valanga_speed += 1
             next_level_screen(livello-1)
+            
             omino = Omino()
-            spits = [Spit() for _ in range(5)]
+            spits = []
+            for _ in range(5):
+                spits.append(Spit())
             arrivo = Arrivo()
             ostacoli = [Ostacolo() for _ in range(3)]
+            barriere = []
+            while len(barriere) < np.min([livello, 8]):
+                new_barriera = Barriera()
+                if not any(new_barriera.rect.colliderect(spit.rect) for spit in spits):
+                    barriere.append(new_barriera)
 
             #èer disegnare la corda nel nuovo livello
             ultimo_spit = None  # Resetta l'ultimo spit
@@ -262,6 +337,7 @@ while running:
             spits_raggiunti.append((omino.x, omino.y))
             ultima_x = omino.x
             ultima_y = omino.y
+
 
     # Movimento ostacoli
     for ostacolo in ostacoli:
@@ -275,7 +351,8 @@ while running:
         spit.draw()
     for ostacolo in ostacoli:
         ostacolo.draw()
-
+    for barriera in barriere:
+        barriera.draw()
     # Disegna la linea verso l'ultimo spit
     pygame.draw.line(
             display, BLACK,
@@ -298,4 +375,13 @@ while running:
     text2 = font.render(f"Level: {livello}", True, BLACK)
     display.blit(text2, (10, 40))
 
+    # Mostra highscore
+    font = pygame.font.Font(None, 36)
+    if os.path.exists("highscore.txt"):
+        with open("highscore.txt", "r") as file:
+            highscore = int(file.read())
+    else:
+        highscore = 0
+    text3 = font.render(f"Highscore: {highscore}", True, BLACK)
+    display.blit(text3, (10, 70))
     pygame.display.flip()
