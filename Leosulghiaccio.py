@@ -144,7 +144,7 @@ class Omino:
 class Spit:
     def __init__(self):
         self.x = random.randint(0, WIDTH - SPIT_RADIUS * 2)
-        self.y = random.randint(HEIGHT*0.1, HEIGHT // 1.2)
+        self.y = random.randint(int(HEIGHT*0.1), int(HEIGHT // 1.2))
         self.color = GRAY
         self.radius = SPIT_RADIUS
         self.rect = pygame.Rect(self.x, self.y, self.radius * 2, self.radius * 2)
