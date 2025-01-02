@@ -424,6 +424,60 @@ def main():
         display.blit(text3, (10, 60))
         pygame.display.flip()
 
+
+def entry_screen():
+    running_start = True
+    omino = Omino()
+    omino.x = WIDTH // 2
+    omino.rect.y = HEIGHT // 2 - 40
+    omino.sxdx = 30
+    print(omino.y)
+    spits = [Spit() for _ in range(5)]
+    arrivo = Arrivo()
+    while running_start:
+        clock.tick(FPS)
+        display.fill(WHITE)
+        font = pygame.font.Font(None, 36)
+
+        title_text = font.render("Aiuta Leonardo a completare la scalata sulle cascate di ghiaccio", True, BLACK)
+        display.blit(title_text,
+                     (WIDTH // 2 - title_text.get_width() // 2, -120 +HEIGHT // 2 - title_text.get_height() // 2 + 20))
+        font = pygame.font.Font(None, 36)
+        help_text = font.render("Raggiungi tutti i rinvii, fino a quello rosso in alto", True, BLACK)
+        display.blit(help_text,
+                     (WIDTH // 2 - help_text.get_width() // 2, +40+HEIGHT // 2 - help_text.get_height() // 2 + 20))
+        help2_text = font.render("Muoviti usando le frecce ed evita le stalattiti che cadono dall'alto", True, BLACK)
+        display.blit(help2_text,
+                     (WIDTH // 2 - help2_text.get_width() // 2, +80 + HEIGHT // 2 - help2_text.get_height() // 2 + 20))
+        via_text = font.render("Premi S per proseguire", True, BLACK)
+        display.blit(via_text, (WIDTH // 2 - via_text.get_width() // 2, 180 + HEIGHT // 2 - via_text.get_height() // 2 + 20))
+
+        omino.draw()
+        arrivo.draw()
+        for spit in spits:
+            spit.draw()
+
+
+        # Disegna la linea tra gli spit raggiunti
+
+        keys = pygame.key.get_pressed()
+        omino.move(keys)
+        pygame.display.flip()
+
+
+
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_s:
+                    main()  #via
+                if event.key == pygame.K_q:
+                    running_start = False
+
+        keys = pygame.key.get_pressed()
+        omino.move(keys)
+
+
 if __name__ == "__main__":
-    main()
+    entry_screen()
+
 
