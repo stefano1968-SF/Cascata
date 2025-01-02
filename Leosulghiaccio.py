@@ -42,7 +42,6 @@ class Omino:
         self.rect = pygame.Rect(self.x - self.body_width // 2, self.y - self.body_height // 2, self.body_width,
                                 self.body_height)
 
-
     def draw(self):
         # Disegna il corpo rettangolare
         pygame.draw.rect(display, self.color, self.rect)
@@ -61,7 +60,7 @@ class Omino:
         pygame.draw.line(display, self.color, (self.rect.left, self.rect.bottom),
                          (self.rect.left - 10 - self.dxsx, self.rect.bottom + 30 + self.sxdx), 2)
         pygame.draw.line(display, self.color, (self.rect.right, self.rect.bottom),
-                         (self.rect.right + 10 +self.dxsx, self.rect.bottom + 30 - self.sxdx), 2)
+                         (self.rect.right + 10 + self.dxsx, self.rect.bottom + 30 - self.sxdx), 2)
 
     def move(self, keys):
         if keys[pygame.K_LEFT] and self.rect.left > 0:
@@ -75,7 +74,7 @@ class Omino:
                 self.dxsx = -1
             elif self.dxsx == -1:
                 self.dxsx = 20
-            
+
         if keys[pygame.K_RIGHT] and self.rect.right < WIDTH:
             self.rect.x += OMINO_SPEED
             self.sxdx = 1
@@ -129,7 +128,6 @@ class Omino:
             elif self.sxdx == -1:
                 self.sxdx = 30
 
-
         if keys[pygame.K_DOWN] and self.rect.bottom < HEIGHT:
             self.rect.y -= OMINO_SPEED
             if self.sxdx == 30:
@@ -140,11 +138,17 @@ class Omino:
                 self.sxdx = -1
             elif self.sxdx == -1:
                 self.sxdx = 30
+
+    def bump(self, xx, yy):
+        self.rect.x += 20 * OMINO_SPEED * xx
+        self.rect.y += 20 * OMINO_SPEED * yy
+
+
 # Classe per gli spit
 class Spit:
     def __init__(self):
         self.x = random.randint(0, WIDTH - SPIT_RADIUS * 2)
-        self.y = random.randint(int(HEIGHT*0.1), int(HEIGHT // 1.2))
+        self.y = random.randint(int(HEIGHT * 0.1), int(HEIGHT // 1.2))
         self.color = GRAY
         self.radius = SPIT_RADIUS
         self.rect = pygame.Rect(self.x, self.y, self.radius * 2, self.radius * 2)
@@ -152,11 +156,12 @@ class Spit:
     def draw(self):
         pygame.draw.circle(display, self.color, (self.x + self.radius, self.y + self.radius), 10)
 
+
 # Classe per arrivo
 class Arrivo:
     def __init__(self):
         self.x = random.randint(0, WIDTH - SPIT_RADIUS * 2)
-        self.y = + SPIT_RADIUS 
+        self.y = + SPIT_RADIUS
         self.color = RED
         self.radius = SPIT_RADIUS
         self.rect = pygame.Rect(self.x, self.y, self.radius * 2, self.radius * 2)
@@ -164,22 +169,21 @@ class Arrivo:
     def draw(self):
         pygame.draw.circle(display, self.color, (self.x + self.radius, self.y + self.radius), 10)
 
+
 class Barriera:
     def __init__(self):
         self.x = random.randint(0, WIDTH - 100)
         y_options = [HEIGHT * 0.2, HEIGHT * 0.8, HEIGHT * 0.4, HEIGHT * 0.6]
         self.y = random.choice(y_options)
-        #self.y = random.randint(HEIGHT*0.2, HEIGHT *0.8)
+        # self.y = random.randint(HEIGHT*0.2, HEIGHT *0.8)
         self.width = random.randint(50, 100)
         self.height = random.randint(10, 40)
         self.color = BLACK
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
-    
+
     def draw(self):
         pygame.draw.rect(display, self.color, self.rect)
 
- 
-        
 
 # Classe per le valanghe e le stalattiti
 class Ostacolo:
@@ -194,13 +198,53 @@ class Ostacolo:
         self.distanza_ostacoli = distanza
 
     def draw(self):
-        #pygame.draw.rect(display, self.color, self.rect)
-        pygame.draw.polygon(display, self.color, [(self.rect.x, self.rect.y), (self.rect.x + self.width, self.rect.y), (self.rect.x + self.width // 2, self.rect.y + self.height)])
+        # pygame.draw.rect(display, self.color, self.rect)
+        pygame.draw.polygon(display, self.color, [(self.rect.x, self.rect.y), (self.rect.x + self.width, self.rect.y),
+                                                  (self.rect.x + self.width // 2, self.rect.y + self.height)])
+
     def move(self):
         self.rect.y += self.valanga_speed
         if self.rect.top > HEIGHT:
             self.rect.y = random.randint(-200, -50)
             self.rect.x = random.randint(0, self.distanza_ostacoli * WIDTH - self.width)
+
+
+# Classe per Capretti
+class Capretto:
+    def __init__(self, speed):
+        self.x = random.randint(0, WIDTH - 30)
+        self.y = random.randint(-200, HEIGHT - 60)
+        self.width = 40
+        self.height = 10
+        self.color_head = BLUE
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        self.capra_speed = speed
+
+    def draw(self):
+        # Disegna il corpo rettangolare
+        pygame.draw.rect(display, self.color_head, self.rect)
+
+        # Disegna la testa
+        head_center = (self.rect.x, self.rect.top - 10)
+        pygame.draw.circle(display, self.color_head, head_center, 10)
+
+        # Disegna le gambe
+        pygame.draw.line(display, BLACK, (self.rect.left, self.rect.bottom),
+                         (self.rect.left - 5, self.rect.bottom + 20), 2)
+        pygame.draw.line(display, BLACK, (self.rect.left, self.rect.bottom),
+                         (self.rect.left + 5, self.rect.bottom + 20), 2)
+        pygame.draw.line(display, BLACK, (self.rect.right, self.rect.bottom),
+                         (self.rect.right - 5, self.rect.bottom + 20), 2)
+        pygame.draw.line(display, BLACK, (self.rect.right, self.rect.bottom),
+                         (self.rect.right + 5, self.rect.bottom + 20), 2)
+
+    def move(self, ominox, ominoy):
+        self.rect.x += self.capra_speed * - np.sign(self.rect.x - ominox)
+        self.rect.y += self.capra_speed * - np.sign(self.rect.y - ominoy)
+
+    def bump(self, xx, yy):
+        self.rect.x += -20 * OMINO_SPEED * xx
+        self.rect.y += -20 * OMINO_SPEED * yy
 
 
 def animate_fall(omino):
@@ -217,13 +261,23 @@ def animate_fall(omino):
     for rotola in range(20):
         display.fill(WHITE)
         # Disegna il corpo diviso in pezzi
-        pygame.draw.rect(display, omino.color, (omino.rect.x- 15 + rotola * 6, omino.rect.y- 144 + (rotola-12)**2, omino.body_width, omino.body_height // 2))
-        pygame.draw.rect(display, omino.color, (omino.rect.x + 15 - rotola *13, omino.rect.y + omino.body_height // 2 + 10 - 64 + (rotola-8)**2, omino.body_width, omino.body_height // 2))
-        pygame.draw.circle(display, omino.color_head, (omino.rect.centerx + rotola * 15, omino.rect.top - 100 + (rotola-10)**2 - omino.head_radius), omino.head_radius)
-        pygame.draw.line(display, omino.color, (omino.rect.left - rotola * 2, omino.rect.y + rotola * 10), (omino.rect.left - 35 - rotola * 2, omino.rect.centery - 20 - omino.sxdx + rotola * 10), 3)
-        pygame.draw.line(display, omino.color, (omino.rect.right + rotola * 30, omino.rect.y + rotola * 10), (omino.rect.right + 33 + rotola * 30, omino.rect.centery - 20 + omino.sxdx + rotola * 10), 3)
-        pygame.draw.line(display, omino.color, (omino.rect.left - rotola * 12 , omino.rect.bottom + rotola * 10), (omino.rect.left - 17 - rotola * 12, omino.rect.bottom + 34 + omino.sxdx + rotola * 10), 2)
-        pygame.draw.line(display, omino.color, (omino.rect.right + rotola * 4, omino.rect.bottom + rotola * 10), (omino.rect.right + 14 + rotola * 4, omino.rect.bottom + 34 - omino.sxdx + rotola * 10), 2)
+        pygame.draw.rect(display, omino.color, (
+        omino.rect.x - 15 + rotola * 6, omino.rect.y - 144 + (rotola - 12) ** 2, omino.body_width,
+        omino.body_height // 2))
+        pygame.draw.rect(display, omino.color, (
+        omino.rect.x + 15 - rotola * 13, omino.rect.y + omino.body_height // 2 + 10 - 64 + (rotola - 8) ** 2,
+        omino.body_width, omino.body_height // 2))
+        pygame.draw.circle(display, omino.color_head, (
+        omino.rect.centerx + rotola * 15, omino.rect.top - 100 + (rotola - 10) ** 2 - omino.head_radius),
+                           omino.head_radius)
+        pygame.draw.line(display, omino.color, (omino.rect.left - rotola * 2, omino.rect.y + rotola * 10),
+                         (omino.rect.left - 35 - rotola * 2, omino.rect.centery - 20 - omino.sxdx + rotola * 10), 3)
+        pygame.draw.line(display, omino.color, (omino.rect.right + rotola * 30, omino.rect.y + rotola * 10),
+                         (omino.rect.right + 33 + rotola * 30, omino.rect.centery - 20 + omino.sxdx + rotola * 10), 3)
+        pygame.draw.line(display, omino.color, (omino.rect.left - rotola * 12, omino.rect.bottom + rotola * 10),
+                         (omino.rect.left - 17 - rotola * 12, omino.rect.bottom + 34 + omino.sxdx + rotola * 10), 2)
+        pygame.draw.line(display, omino.color, (omino.rect.right + rotola * 4, omino.rect.bottom + rotola * 10),
+                         (omino.rect.right + 14 + rotola * 4, omino.rect.bottom + 34 - omino.sxdx + rotola * 10), 2)
         pygame.display.flip()
         clock.tick(15)
 
@@ -232,16 +286,16 @@ def game_over_screen(score, omino):
     animate_fall(omino)
 
     display.fill(WHITE)
-    
 
     font = pygame.font.Font(None, 74)
     text = font.render("Game Over", True, RED)
     display.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - text.get_height() // 2 - 50))
-    
+
     font = pygame.font.Font(None, 36)
     score_text = font.render(f"Punteggio: {score}", True, BLACK)
-    display.blit(score_text, (WIDTH // 2 - score_text.get_width() // 2, HEIGHT // 2 - score_text.get_height() // 2 + 20))
-    
+    display.blit(score_text,
+                 (WIDTH // 2 - score_text.get_width() // 2, HEIGHT // 2 - score_text.get_height() // 2 + 20))
+
     if os.path.exists("highscore.txt"):
         with open("highscore.txt", "r") as file:
             highscore = int(file.read())
@@ -252,7 +306,8 @@ def game_over_screen(score, omino):
             file.write(str(score))
         font = pygame.font.Font(None, 36)
         record_text = font.render(f"Nuovo record!", True, BLACK)
-        display.blit(record_text, (WIDTH // 2 - record_text.get_width() // 2, HEIGHT // 2 - record_text.get_height() // 2 + 80))
+        display.blit(record_text,
+                     (WIDTH // 2 - record_text.get_width() // 2, HEIGHT // 2 - record_text.get_height() // 2 + 80))
     pygame.display.flip()
 
     time.sleep(3)
@@ -263,14 +318,14 @@ def next_level_screen(level):
     font = pygame.font.Font(None, 74)
     text = font.render("Bravo, continua!", True, RED)
     display.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - text.get_height() // 2 - 50))
-    
+
     font = pygame.font.Font(None, 36)
-    score_text = font.render(f"Prossimo livello: {level+1}", True, BLACK)
-    display.blit(score_text, (WIDTH // 2 - score_text.get_width() // 2, HEIGHT // 2 - score_text.get_height() // 2 + 20))
-    
+    score_text = font.render(f"Prossimo livello: {level + 1}", True, BLACK)
+    display.blit(score_text,
+                 (WIDTH // 2 - score_text.get_width() // 2, HEIGHT // 2 - score_text.get_height() // 2 + 20))
+
     pygame.display.flip()
     time.sleep(3)
-
 
 
 def main():
@@ -278,8 +333,9 @@ def main():
     omino = Omino()
     spits = [Spit() for _ in range(5)]
     arrivo = Arrivo()
-    ostacoli = [Ostacolo(4,5) for _ in range(3)]
+    ostacoli = [Ostacolo(4, 5) for _ in range(3)]
     barriere = []
+    capretti = []
 
     while len(barriere) == 0:
         barriera_temp = Barriera()
@@ -292,6 +348,7 @@ def main():
     running = True
     distanza_ostacoli = 5
     valanga_speed = 4
+    capra_speed = 1
     ultimo_spit = None
     spits_raggiunti = []
     spits_raggiunti.append((omino.x, omino.y))
@@ -315,6 +372,14 @@ def main():
                 omino.barriera(keys)
 
         # Controllo collisioni
+
+        for capretto in capretti[:]:
+            if omino.rect.colliderect(capretto.rect):
+                direzione_x = np.sign(omino.rect.x - capretto.rect.x)
+                direzione_y = np.sign(omino.rect.y - capretto.rect.y)
+                omino.bump(direzione_x, direzione_y)
+                capretto.bump(direzione_x, direzione_y)
+
         for spit in spits[:]:
             if omino.rect.colliderect(spit.rect):
                 spits.remove(spit)
@@ -332,10 +397,11 @@ def main():
                 while True:
                     for event in pygame.event.get():
                         display.fill(WHITE)
-                       
+
                         font = pygame.font.Font(None, 36)
                         score_text = font.render("Schiaccia Q per uscire or R per ricominciare", True, BLACK)
-                        display.blit(score_text, (WIDTH // 2 - score_text.get_width() // 2, HEIGHT // 2 - score_text.get_height() // 2 + 20))
+                        display.blit(score_text, (
+                        WIDTH // 2 - score_text.get_width() // 2, HEIGHT // 2 - score_text.get_height() // 2 + 20))
                         pygame.display.flip()
                         if event.type == pygame.QUIT:
                             pygame.quit()
@@ -364,11 +430,16 @@ def main():
                     spits.append(Spit())
                 arrivo = Arrivo()
                 ostacoli = [Ostacolo(valanga_speed, distanza_ostacoli) for _ in range(3)]
+
                 barriere = []
                 while len(barriere) < np.min([livello, 8]):
                     new_barriera = Barriera()
                     if not any(new_barriera.rect.colliderect(spit.rect) for spit in spits):
                         barriere.append(new_barriera)
+
+                capretti = []
+                while len(capretti) < np.min([livello - 3, 1]):
+                    capretti.append(Capretto(capra_speed))
 
                 # Per disegnare la corda nel nuovo livello
                 ultimo_spit = None  # Resetta l'ultimo spit
@@ -377,14 +448,20 @@ def main():
                 ultima_x = omino.x
                 ultima_y = omino.y
 
-        # Movimento ostacoli
+            # Movimento ostacoli
         for ostacolo in ostacoli:
             ostacolo.move()
+
+            # Movimento capretto
+        for capretto in capretti:
+            capretto.move(omino.rect.x, omino.rect.y)
 
         # Disegna lo schermo
         display.fill(WHITE)
         omino.draw()
         arrivo.draw()
+        for capretto in capretti:
+            capretto.draw()
         for spit in spits:
             spit.draw()
         for ostacolo in ostacoli:
@@ -441,22 +518,22 @@ def entry_screen():
 
         title_text = font.render("Aiuta Leonardo a completare la scalata sulle cascate di ghiaccio", True, BLACK)
         display.blit(title_text,
-                     (WIDTH // 2 - title_text.get_width() // 2, -120 +HEIGHT // 2 - title_text.get_height() // 2 + 20))
+                     (WIDTH // 2 - title_text.get_width() // 2, -120 + HEIGHT // 2 - title_text.get_height() // 2 + 20))
         font = pygame.font.Font(None, 36)
         help_text = font.render("Raggiungi tutti i rinvii, fino a quello rosso in alto", True, BLACK)
         display.blit(help_text,
-                     (WIDTH // 2 - help_text.get_width() // 2, +40+HEIGHT // 2 - help_text.get_height() // 2 + 20))
+                     (WIDTH // 2 - help_text.get_width() // 2, +40 + HEIGHT // 2 - help_text.get_height() // 2 + 20))
         help2_text = font.render("Muoviti usando le frecce ed evita le stalattiti che cadono dall'alto", True, BLACK)
         display.blit(help2_text,
                      (WIDTH // 2 - help2_text.get_width() // 2, +80 + HEIGHT // 2 - help2_text.get_height() // 2 + 20))
         via_text = font.render("Premi S per proseguire", True, BLACK)
-        display.blit(via_text, (WIDTH // 2 - via_text.get_width() // 2, 180 + HEIGHT // 2 - via_text.get_height() // 2 + 20))
+        display.blit(via_text,
+                     (WIDTH // 2 - via_text.get_width() // 2, 180 + HEIGHT // 2 - via_text.get_height() // 2 + 20))
 
         omino.draw()
         arrivo.draw()
         for spit in spits:
             spit.draw()
-
 
         # Disegna la linea tra gli spit raggiunti
 
@@ -464,12 +541,10 @@ def entry_screen():
         omino.move(keys)
         pygame.display.flip()
 
-
-
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_s:
-                    main()  #via
+                    main()  # via
                 if event.key == pygame.K_q:
                     running_start = False
 
