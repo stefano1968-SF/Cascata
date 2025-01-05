@@ -63,7 +63,7 @@ class Omino:
                          (self.rect.right + 10 + self.dxsx, self.rect.bottom + 30 - self.sxdx), 2)
 
     def move(self, keys):
-        if keys[pygame.K_LEFT] and self.rect.left > 0:
+        if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and self.rect.left > 0:
             self.rect.x -= OMINO_SPEED
             self.sxdx = 1
             if self.dxsx == 20:
@@ -75,7 +75,7 @@ class Omino:
             elif self.dxsx == -1:
                 self.dxsx = 20
 
-        if keys[pygame.K_RIGHT] and self.rect.right < WIDTH:
+        if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and self.rect.right < WIDTH:
             self.rect.x += OMINO_SPEED
             self.sxdx = 1
             if self.dxsx == 20:
@@ -86,7 +86,7 @@ class Omino:
                 self.dxsx = -1
             elif self.dxsx == -1:
                 self.dxsx = 20
-        if keys[pygame.K_UP] and self.rect.top > 0:
+        if (keys[pygame.K_UP] or keys[pygame.K_w]) and self.rect.top > 0:
             self.rect.y -= OMINO_SPEED
             self.dxsx = 1
             if self.sxdx == 30:
@@ -98,7 +98,7 @@ class Omino:
             elif self.sxdx == -1:
                 self.sxdx = 30
 
-        if keys[pygame.K_DOWN] and self.rect.bottom < HEIGHT:
+        if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and self.rect.bottom < HEIGHT:
             self.rect.y += OMINO_SPEED
             self.dxsx = 1
             if self.sxdx == 30:
@@ -111,13 +111,13 @@ class Omino:
                 self.sxdx = 30
 
     def barriera(self, keys):
-        if keys[pygame.K_LEFT] and self.rect.left > 0:
+        if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and self.rect.left > 0:
             self.rect.x += OMINO_SPEED
             self.sxdx = 1
-        if keys[pygame.K_RIGHT] and self.rect.right < WIDTH:
+        if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and self.rect.right < WIDTH:
             self.rect.x -= OMINO_SPEED
             self.sxdx = 1
-        if keys[pygame.K_UP] and self.rect.top > 0:
+        if (keys[pygame.K_UP] or keys[pygame.K_w]) and self.rect.top > 0:
             self.rect.y += OMINO_SPEED
             if self.sxdx == 30:
                 self.sxdx = 1
@@ -128,7 +128,7 @@ class Omino:
             elif self.sxdx == -1:
                 self.sxdx = 30
 
-        if keys[pygame.K_DOWN] and self.rect.bottom < HEIGHT:
+        if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and self.rect.bottom < HEIGHT:
             self.rect.y -= OMINO_SPEED
             if self.sxdx == 30:
                 self.sxdx = 1
@@ -526,7 +526,7 @@ def entry_screen():
         help2_text = font.render("Muoviti usando le frecce ed evita le stalattiti che cadono dall'alto", True, BLACK)
         display.blit(help2_text,
                      (WIDTH // 2 - help2_text.get_width() // 2, +80 + HEIGHT // 2 - help2_text.get_height() // 2 + 20))
-        via_text = font.render("Premi S per proseguire", True, BLACK)
+        via_text = font.render("Premi N per proseguire", True, BLACK)
         display.blit(via_text,
                      (WIDTH // 2 - via_text.get_width() // 2, 180 + HEIGHT // 2 - via_text.get_height() // 2 + 20))
 
@@ -543,7 +543,7 @@ def entry_screen():
 
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_s:
+                if event.key == pygame.K_n:
                     main()  # via
                 if event.key == pygame.K_q:
                     running_start = False
