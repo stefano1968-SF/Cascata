@@ -44,12 +44,20 @@ class Omino:
 
     def draw(self):
         # Disegna il corpo rettangolare
-        pygame.draw.rect(display, self.color, self.rect)
+        # pygame.draw.rect(display, self.color, self.rect)
 
-        # Disegna la testa
-        head_center = (self.rect.centerx, self.rect.top - self.head_radius)
-        pygame.draw.circle(display, self.color_head, head_center, self.head_radius)
+        # # Disegna la testa
+        # head_center = (self.rect.centerx, self.rect.top - self.head_radius)
+        # pygame.draw.circle(display, self.color_head, head_center, self.head_radius)
+        # Carica l'immagine
+        torso_head_image = pygame.image.load('images/torso_head.png')
+        torso_head_image = pygame.transform.scale(torso_head_image, (self.body_width*1.85, (self.body_height + self.head_radius * 2)*1.35))
 
+        # Calcola la posizione dell'immagine
+        image_rect = torso_head_image.get_rect(center=(self.rect.centerx, self.rect.centery - self.head_radius+ 17))
+
+        # Disegna l'immagine
+        display.blit(torso_head_image, image_rect)
         # Disegna le braccia
         pygame.draw.line(display, self.color, (self.rect.left, self.rect.y),
                          (self.rect.left - 30 - self.dxsx, self.rect.centery - 30 - self.sxdx), 3)
@@ -300,6 +308,7 @@ class Capretto:
         self.color_head = BLUE
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.capra_speed = speed
+        self.dx = 1
 
     def draw(self):
         # Disegna il corpo rettangolare
@@ -308,7 +317,17 @@ class Capretto:
         # Disegna la testa
         head_center = (self.rect.x, self.rect.top - 10)
         pygame.draw.circle(display, self.color_head, head_center, 10)
+        # Carica l'immagine
+        capra_image = pygame.image.load('images/capra.png')
+        if self.dx == 1:
+            capra_image = pygame.transform.flip(capra_image, True, False)
+        capra_image = pygame.transform.scale(capra_image, (self.width * 2, (self.height + 20)*2))
 
+        # Calcola la posizione dell'immagine
+        image_rect = capra_image.get_rect(center=(self.rect.centerx, self.rect.centery - 10))
+
+        # Disegna l'immagine
+        display.blit(capra_image, image_rect)
         # Disegna le gambe
         pygame.draw.line(display, BLACK, (self.rect.left, self.rect.bottom),
                          (self.rect.left - 5, self.rect.bottom + 20), 2)
@@ -322,7 +341,7 @@ class Capretto:
     def move(self, ominox, ominoy):
         self.rect.x += self.capra_speed * - np.sign(self.rect.x - ominox)
         self.rect.y += self.capra_speed * - np.sign(self.rect.y - ominoy)
-
+        self.dx = 1* np.sign(self.rect.x - ominox)
     def bump(self, xx, yy):
         self.rect.x += -20 * OMINO_SPEED * xx
         self.rect.y += -20 * OMINO_SPEED * yy
@@ -520,6 +539,7 @@ def main():
 
                 capretti = []
                 while len(capretti) < np.min([livello - 3, 1]):
+
                     capretti.append(Capretto(capra_speed))
 
                 # Per disegnare la corda nel nuovo livello
