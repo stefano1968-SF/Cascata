@@ -10,8 +10,8 @@ pygame.init()
 
 # Costanti
 WIDTH, HEIGHT = 800, 600
-FPS = 60
-OMINO_SPEED = 5
+FPS = 30
+OMINO_SPEED = 10
 SPIT_RADIUS = 15
 
 # Colori
@@ -67,47 +67,96 @@ class Omino:
             self.rect.x -= OMINO_SPEED
             self.sxdx = 1
             if self.dxsx == 20:
+                self.dxsx = 11
+            elif self.dxsx == 11:
                 self.dxsx = 1
             elif self.dxsx == 1:
+                self.dxsx = -10
+            elif self.dxsx == -10:
                 self.dxsx = -20
             elif self.dxsx == -20:
+                self.dxsx = -11
+            elif self.dxsx == -11:
                 self.dxsx = -1
             elif self.dxsx == -1:
+                self.dxsx = 10
+            elif self.dxsx == 10:
                 self.dxsx = 20
+            
 
         if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and self.rect.right < WIDTH:
             self.rect.x += OMINO_SPEED
             self.sxdx = 1
             if self.dxsx == 20:
+                self.dxsx = 11
+            elif self.dxsx == 11:
                 self.dxsx = 1
             elif self.dxsx == 1:
+                self.dxsx = -10
+            elif self.dxsx == -10:
                 self.dxsx = -20
             elif self.dxsx == -20:
+                self.dxsx = -11
+            elif self.dxsx == -11:
                 self.dxsx = -1
             elif self.dxsx == -1:
+                self.dxsx = 10
+            elif self.dxsx == 10:
                 self.dxsx = 20
         if (keys[pygame.K_UP] or keys[pygame.K_w]) and self.rect.top > 0:
             self.rect.y -= OMINO_SPEED
             self.dxsx = 1
             if self.sxdx == 30:
+                self.sxdx = 21
+            elif self.sxdx == 21:
+                self.sxdx = 11
+            elif self.sxdx == 11:
                 self.sxdx = 1
             elif self.sxdx == 1:
+                self.sxdx = -10
+            elif self.sxdx == -10:
+                self.sxdx = -20
+            elif self.sxdx == -20:
                 self.sxdx = -30
             elif self.sxdx == -30:
+                self.sxdx = -21
+            elif self.sxdx == -21:
+                self.sxdx = -11
+            elif self.sxdx == -11:
                 self.sxdx = -1
             elif self.sxdx == -1:
+                self.sxdx = 10
+            elif self.sxdx == 10:
+                self.sxdx = 20
+            elif self.sxdx == 20:
                 self.sxdx = 30
 
         if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and self.rect.bottom < HEIGHT:
             self.rect.y += OMINO_SPEED
             self.dxsx = 1
             if self.sxdx == 30:
+                self.sxdx = 21
+            elif self.sxdx == 21:
+                self.sxdx = 11
+            elif self.sxdx == 11:
                 self.sxdx = 1
             elif self.sxdx == 1:
+                self.sxdx = -10
+            elif self.sxdx == -10:
+                self.sxdx = -20
+            elif self.sxdx == -20:
                 self.sxdx = -30
             elif self.sxdx == -30:
+                self.sxdx = -21
+            elif self.sxdx == -21:
+                self.sxdx = -11
+            elif self.sxdx == -11:
                 self.sxdx = -1
             elif self.sxdx == -1:
+                self.sxdx = 10
+            elif self.sxdx == 10:
+                self.sxdx = 20
+            elif self.sxdx == 20:
                 self.sxdx = 30
 
     def barriera(self, keys):
@@ -120,23 +169,55 @@ class Omino:
         if (keys[pygame.K_UP] or keys[pygame.K_w]) and self.rect.top > 0:
             self.rect.y += OMINO_SPEED
             if self.sxdx == 30:
+                self.sxdx = 21
+            elif self.sxdx == 21:
+                self.sxdx = 11
+            elif self.sxdx == 11:
                 self.sxdx = 1
             elif self.sxdx == 1:
+                self.sxdx = -10
+            elif self.sxdx == -10:
+                self.sxdx = -20
+            elif self.sxdx == -20:
                 self.sxdx = -30
             elif self.sxdx == -30:
+                self.sxdx = -21
+            elif self.sxdx == -21:
+                self.sxdx = -11
+            elif self.sxdx == -11:
                 self.sxdx = -1
             elif self.sxdx == -1:
+                self.sxdx = 10
+            elif self.sxdx == 10:
+                self.sxdx = 20
+            elif self.sxdx == 20:
                 self.sxdx = 30
 
         if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and self.rect.bottom < HEIGHT:
             self.rect.y -= OMINO_SPEED
             if self.sxdx == 30:
+                self.sxdx = 21
+            elif self.sxdx == 21:
+                self.sxdx = 11
+            elif self.sxdx == 11:
                 self.sxdx = 1
             elif self.sxdx == 1:
+                self.sxdx = -10
+            elif self.sxdx == -10:
+                self.sxdx = -20
+            elif self.sxdx == -20:
                 self.sxdx = -30
             elif self.sxdx == -30:
+                self.sxdx = -21
+            elif self.sxdx == -21:
+                self.sxdx = -11
+            elif self.sxdx == -11:
                 self.sxdx = -1
             elif self.sxdx == -1:
+                self.sxdx = 10
+            elif self.sxdx == 10:
+                self.sxdx = 20
+            elif self.sxdx == 20:
                 self.sxdx = 30
 
     def bump(self, xx, yy):
@@ -347,8 +428,8 @@ def main():
     livello = 1
     running = True
     distanza_ostacoli = 5
-    valanga_speed = 4
-    capra_speed = 1
+    valanga_speed = 8
+    capra_speed = 2
     ultimo_spit = None
     spits_raggiunti = []
     spits_raggiunti.append((omino.x, omino.y))
