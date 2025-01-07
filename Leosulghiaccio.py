@@ -352,6 +352,12 @@ def animate_fall(omino):
         velocita = (HEIGHT - omino.rect.y) // 10 - 5
         omino.rect.y += velocita
         display.fill(WHITE)
+        # Carica l'immagine di sfondo
+        background_image = pygame.image.load('images/cascata.png')
+        background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
+
+        # Disegna l'immagine di sfondo
+        display.blit(background_image, (0, 0))
         omino.draw()
         font = pygame.font.Font(None, 74)
         text = font.render("Game Over", True, RED)
@@ -360,6 +366,12 @@ def animate_fall(omino):
         clock.tick(15)
     for rotola in range(20):
         display.fill(WHITE)
+                # Carica l'immagine di sfondo
+        background_image = pygame.image.load('images/cascata.png')
+        background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
+
+        # Disegna l'immagine di sfondo
+        display.blit(background_image, (0, 0))
         # Disegna il corpo diviso in pezzi
         pygame.draw.rect(display, omino.color, (
         omino.rect.x - 15 + rotola * 6, omino.rect.y - 144 + (rotola - 12) ** 2, omino.body_width,
@@ -386,7 +398,12 @@ def game_over_screen(score, omino):
     animate_fall(omino)
 
     display.fill(WHITE)
+    # Carica l'immagine di sfondo
+    background_image = pygame.image.load('images/cascata.png')
+    background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
 
+    # Disegna l'immagine di sfondo
+    display.blit(background_image, (0, 0))
     font = pygame.font.Font(None, 74)
     text = font.render("Game Over", True, RED)
     display.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - text.get_height() // 2 - 50))
@@ -415,6 +432,12 @@ def game_over_screen(score, omino):
 
 def next_level_screen(level):
     display.fill(WHITE)
+        # Carica l'immagine di sfondo
+    background_image = pygame.image.load('images/cascata.png')
+    background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
+
+    # Disegna l'immagine di sfondo
+    display.blit(background_image, (0, 0))
     font = pygame.font.Font(None, 74)
     text = font.render("Bravo, continua!", True, RED)
     display.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - text.get_height() // 2 - 50))
@@ -497,7 +520,12 @@ def main():
                 while True:
                     for event in pygame.event.get():
                         display.fill(WHITE)
+                        # Carica l'immagine di sfondo
+                        background_image = pygame.image.load('images/cascata.png')
+                        background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
 
+                        # Disegna l'immagine di sfondo
+                        display.blit(background_image, (0, 0))
                         font = pygame.font.Font(None, 36)
                         score_text = font.render("Schiaccia Q per uscire or R per ricominciare", True, BLACK)
                         display.blit(score_text, (
@@ -559,6 +587,12 @@ def main():
 
         # Disegna lo schermo
         display.fill(WHITE)
+                # Carica l'immagine di sfondo
+        background_image = pygame.image.load('images/cascata.png')
+        background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
+
+        # Disegna l'immagine di sfondo
+        display.blit(background_image, (0, 0))
         omino.draw()
         arrivo.draw()
         for capretto in capretti:
@@ -615,6 +649,12 @@ def entry_screen():
     while running_start:
         clock.tick(FPS)
         display.fill(WHITE)
+                # Carica l'immagine di sfondo
+        background_image = pygame.image.load('images/cascata.png')
+        background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
+
+        # Disegna l'immagine di sfondo
+        display.blit(background_image, (0, 0))
         font = pygame.font.Font(None, 36)
 
         title_text = font.render("Aiuta Leonardo a completare la scalata sulle cascate di ghiaccio", True, BLACK)
