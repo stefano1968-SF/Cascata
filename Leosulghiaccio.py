@@ -242,8 +242,16 @@ class Spit:
         self.radius = SPIT_RADIUS
         self.rect = pygame.Rect(self.x, self.y, self.radius * 2, self.radius * 2)
 
+
     def draw(self):
-        pygame.draw.circle(display, self.color, (self.x + self.radius, self.y + self.radius), 10)
+        #pygame.draw.circle(display, self.color, (self.x + self.radius, self.y + self.radius), 10)
+        spit_image = pygame.image.load('images/spit.png')
+
+        # Calcola la posizione dell'immagine
+        image_rect = spit_image.get_rect(center=(self.rect.centerx - 10, self.rect.centery - 10))
+
+        # Disegna l'immagine
+        display.blit(spit_image, image_rect)
 
 
 # Classe per arrivo
@@ -256,8 +264,14 @@ class Arrivo:
         self.rect = pygame.Rect(self.x, self.y, self.radius * 2, self.radius * 2)
 
     def draw(self):
-        pygame.draw.circle(display, self.color, (self.x + self.radius, self.y + self.radius), 10)
+        #pygame.draw.circle(display, self.color, (self.x + self.radius, self.y + self.radius), 10)
+        arrivo_image = pygame.image.load('images/arrivo.png')
 
+        # Calcola la posizione dell'immagine
+        image_rect = arrivo_image.get_rect(center=(self.rect.centerx, self.rect.centery - 10))
+
+        # Disegna l'immagine
+        display.blit(arrivo_image, image_rect)
 
 class Barriera:
     def __init__(self):
@@ -312,12 +326,13 @@ class Capretto:
 
     def draw(self):
         # Disegna il corpo rettangolare
-        pygame.draw.rect(display, self.color_head, self.rect)
+        #pygame.draw.rect(display, self.color_head, self.rect)
 
         # Disegna la testa
-        head_center = (self.rect.x, self.rect.top - 10)
-        pygame.draw.circle(display, self.color_head, head_center, 10)
+        #head_center = (self.rect.x, self.rect.top - 10)
+        #pygame.draw.circle(display, self.color_head, head_center, 10)
         # Carica l'immagine
+
         capra_image = pygame.image.load('images/capra.png')
         if self.dx == 1:
             capra_image = pygame.transform.flip(capra_image, True, False)
@@ -329,14 +344,14 @@ class Capretto:
         # Disegna l'immagine
         display.blit(capra_image, image_rect)
         # Disegna le gambe
-        pygame.draw.line(display, BLACK, (self.rect.left, self.rect.bottom),
-                         (self.rect.left - 5, self.rect.bottom + 20), 2)
-        pygame.draw.line(display, BLACK, (self.rect.left, self.rect.bottom),
-                         (self.rect.left + 5, self.rect.bottom + 20), 2)
-        pygame.draw.line(display, BLACK, (self.rect.right, self.rect.bottom),
-                         (self.rect.right - 5, self.rect.bottom + 20), 2)
-        pygame.draw.line(display, BLACK, (self.rect.right, self.rect.bottom),
-                         (self.rect.right + 5, self.rect.bottom + 20), 2)
+        #pygame.draw.line(display, BLACK, (self.rect.left, self.rect.bottom),
+        #                 (self.rect.left - 5, self.rect.bottom + 20), 2)
+        #pygame.draw.line(display, BLACK, (self.rect.left, self.rect.bottom),
+        #                 (self.rect.left + 5, self.rect.bottom + 20), 2)
+        #pygame.draw.line(display, BLACK, (self.rect.right, self.rect.bottom),
+        #                 (self.rect.right - 5, self.rect.bottom + 20), 2)
+        #pygame.draw.line(display, BLACK, (self.rect.right, self.rect.bottom),
+        #                 (self.rect.right + 5, self.rect.bottom + 20), 2)
 
     def move(self, ominox, ominoy):
         self.rect.x += self.capra_speed * - np.sign(self.rect.x - ominox)
@@ -455,6 +470,8 @@ def main():
     # Inizializza oggetti
     omino = Omino()
     spits = [Spit() for _ in range(5)]
+    spits_superati = []
+
     arrivo = Arrivo()
     ostacoli = [Ostacolo(4, 5) for _ in range(3)]
     barriere = []
@@ -509,7 +526,8 @@ def main():
                 ultimo_spit = spit  # Memorizza l'ultimo spit raggiunto
                 ultima_y = spit.y
                 ultima_x = spit.x
-                spits_raggiunti.append((spit.x, spit.y))
+                spits_raggiunti.append((spit.x , spit.y))
+                spits_superati.append(spit)
                 score += 10
 
         # Controllo collisioni con ostacoli
@@ -553,6 +571,7 @@ def main():
                 next_level_screen(livello - 1)
 
                 omino = Omino()
+                spits_superati = []
                 spits = []
                 for _ in range(5):
                     spits.append(Spit())
@@ -573,7 +592,7 @@ def main():
                 # Per disegnare la corda nel nuovo livello
                 ultimo_spit = None  # Resetta l'ultimo spit
                 spits_raggiunti = []  # Resetta la lista
-                spits_raggiunti.append((omino.x, omino.y))
+                spits_raggiunti.append((omino.x , omino.y))
                 ultima_x = omino.x
                 ultima_y = omino.y
 
@@ -598,6 +617,8 @@ def main():
         for capretto in capretti:
             capretto.draw()
         for spit in spits:
+            spit.draw()
+        for spit in spits_superati:
             spit.draw()
         for ostacolo in ostacoli:
             ostacolo.draw()
